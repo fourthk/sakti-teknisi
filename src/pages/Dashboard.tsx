@@ -1,89 +1,71 @@
-import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { Pie, Bar } from 'react-chartjs-2';
-import ChartCard from "@/components/ChartCard";
-import CollapsibleSection from "@/components/CollapsibleSection";
-import AssetCard from "@/components/AssetCard";
-import {
-  Server,
-  Network,
-  HardDrive,
-  Database,
-  Monitor,
-  Smartphone,
-  Phone,
-  Tablet,
-  Printer,
-  Shield,
-  Truck,
-  Laptop,
-  FileCode,
-  Globe,
-  Lock,
-  Wrench,
-  FileText,
-  Users,
-  Cloud,
-  Building,
-  Zap,
-  Wind,
-} from "lucide-react";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Plus, FileText, Clock, CheckCircle, Calendar as CalendarIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Dashboard = () => {
-  const pieData = {
-    labels: ['Need Checking', 'Need Review', 'Accepted'],
-    datasets: [
-      {
-        data: [35, 30, 35],
-        backgroundColor: ['#384E66', '#4A6382', '#8FA5C1'],
-        borderColor: ['#ffffff'],
-        borderWidth: 2,
-      },
-    ],
-  };
+  const navigate = useNavigate();
 
-  const barData = {
-    labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+  const weeklyData = {
+    labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
     datasets: [
       {
-        label: 'Changes',
-        data: [3, 4, 5, 4, 6, 5, 6],
+        label: 'Diajukan',
+        data: [5, 6, 4, 7, 8, 3, 2],
         backgroundColor: '#384E66',
+        borderRadius: 4,
+      },
+      {
+        label: 'Disetujui',
+        data: [3, 4, 3, 5, 6, 2, 1],
+        backgroundColor: '#5A7A9F',
+        borderRadius: 4,
+      },
+      {
+        label: 'Diimplementasi',
+        data: [2, 3, 2, 4, 4, 1, 0],
+        backgroundColor: '#8FA5C1',
         borderRadius: 4,
       },
     ],
   };
 
-  const pieOptions = {
+  const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'right' as const,
+        position: 'bottom' as const,
         labels: {
           usePointStyle: true,
           padding: 15,
         },
       },
     },
-  };
-
-  const barOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
     scales: {
       y: {
         beginAtZero: true,
-        max: 8,
       },
     },
   };
+
+  const kpiData = [
+    { label: "Total Laporan Hari Ini", value: "12", icon: FileText, color: "#3B82F6" },
+    { label: "Pending Inspeksi", value: "5", icon: Clock, color: "#F59E0B" },
+    { label: "Disetujui (Menunggu Jadwal)", value: "8", icon: CheckCircle, color: "#10B981" },
+    { label: "Jadwal Hari Ini", value: "3", icon: CalendarIcon, color: "#8B5CF6" },
+  ];
+
+  const recentActivities = [
+    { time: "10:30", text: "Laporan baru dari Dinas Pendidikan - Server down" },
+    { time: "09:15", text: "Inspeksi selesai untuk Request #CR-2024-045" },
+    { time: "08:45", text: "Jadwal implementasi dibuat untuk Request #CR-2024-042" },
+    { time: "08:00", text: "Persetujuan diterima dari Kabid untuk Request #CR-2024-041" },
+  ];
 
   return (
     <div>
@@ -94,104 +76,86 @@ const Dashboard = () => {
         Dashboard
       </h1>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <ChartCard title="Statistika" description="Laporan yang diterima">
-          <Pie data={pieData} options={pieOptions} />
-        </ChartCard>
-        
-        <ChartCard title="Statistika" description="Perubahan yang telah dilakukan">
-          <Bar data={barData} options={barOptions} />
-        </ChartCard>
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {kpiData.map((kpi, index) => {
+          const Icon = kpi.icon;
+          return (
+            <Card key={index} className="p-6 bg-white">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-2">{kpi.label}</p>
+                  <p className="text-4xl font-bold" style={{ color: kpi.color }}>{kpi.value}</p>
+                </div>
+                <div 
+                  className="p-3 rounded-lg"
+                  style={{ backgroundColor: `${kpi.color}20` }}
+                >
+                  <Icon size={24} style={{ color: kpi.color }} />
+                </div>
+              </div>
+            </Card>
+          );
+        })}
       </div>
 
-      {/* Asset Categories */}
-      <CollapsibleSection title="Infrastructure" defaultOpen={true}>
-        <AssetCard icon={Server} count={11} label="Rack" iconColor="#3B82F6" />
-        <AssetCard icon={Server} count={16} label="Server" iconColor="#8B5CF6" />
-        <AssetCard icon={Network} count={11} label="Network Device" iconColor="#EC4899" />
-        <AssetCard icon={HardDrive} count={11} label="Storage System" iconColor="#F59E0B" />
-      </CollapsibleSection>
+      {/* Weekly Trend Chart */}
+      <Card className="p-6 bg-white mb-8">
+        <h2 className="text-xl font-semibold mb-4" style={{ color: "#253040" }}>
+          Tren Mingguan
+        </h2>
+        <p className="text-sm text-muted-foreground mb-4">
+          Laporan yang Diajukan / Disetujui / Diimplementasi
+        </p>
+        <div style={{ height: '300px' }}>
+          <Bar data={weeklyData} options={chartOptions} />
+        </div>
+      </Card>
 
-      <CollapsibleSection title="Virtualization">
-        <AssetCard icon={Database} count={11} label="Hypervisor" iconColor="#10B981" />
-        <AssetCard icon={Monitor} count={16} label="Virtual Machine" iconColor="#6366F1" />
-      </CollapsibleSection>
+      {/* Quick Actions & Recent Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Quick Actions */}
+        <Card className="p-6 bg-white">
+          <h2 className="text-xl font-semibold mb-4" style={{ color: "#253040" }}>
+            Aksi Cepat
+          </h2>
+          <div className="space-y-3">
+            <Button 
+              className="w-full justify-start"
+              style={{ backgroundColor: "#384E66" }}
+              onClick={() => navigate('/change-request')}
+            >
+              <Plus className="mr-2" size={18} />
+              Buat Laporan (Mobile)
+            </Button>
+            <Button 
+              className="w-full justify-start"
+              variant="outline"
+              onClick={() => navigate('/implementation-schedule')}
+            >
+              <CalendarIcon className="mr-2" size={18} />
+              Buat Jadwal
+            </Button>
+          </div>
+        </Card>
 
-      <CollapsibleSection title="End User Devices">
-        <AssetCard icon={Laptop} count={11} label="PC/Workstation" iconColor="#3B82F6" />
-        <AssetCard icon={Phone} count={11} label="Phone" iconColor="#EF4444" />
-        <AssetCard icon={Smartphone} count={16} label="IP Phone" iconColor="#8B5CF6" />
-        <AssetCard icon={Smartphone} count={11} label="Mobile Phone" iconColor="#06B6D4" />
-        <AssetCard icon={Tablet} count={11} label="Tablet" iconColor="#F59E0B" />
-        <AssetCard icon={Printer} count={11} label="Printer" iconColor="#14B8A6" />
-      </CollapsibleSection>
-
-      <CollapsibleSection title="Non-TI Supporting Assets">
-        <AssetCard icon={Shield} count={11} label="Physical Security" iconColor="#DC2626" />
-        <AssetCard icon={Truck} count={11} label="Transport/Logistics" iconColor="#059669" />
-      </CollapsibleSection>
-
-      <CollapsibleSection title="Software & Logical CI">
-        <AssetCard icon={FileCode} count={11} label="Operating System" iconColor="#3B82F6" />
-        <AssetCard icon={Database} count={11} label="Database" iconColor="#8B5CF6" />
-        <AssetCard icon={Server} count={11} label="Application/Middleware" iconColor="#EC4899" />
-        <AssetCard icon={Laptop} count={11} label="Business Application" iconColor="#F59E0B" />
-        <AssetCard icon={HardDrive} count={11} label="Backup & Monitoring Tools" iconColor="#10B981" />
-      </CollapsibleSection>
-
-      <CollapsibleSection title="Network & Connectivity">
-        <AssetCard icon={Globe} count={11} label="WAN Device" iconColor="#3B82F6" />
-        <AssetCard icon={Network} count={11} label="LAN Device" iconColor="#10B981" />
-        <AssetCard icon={Shield} count={11} label="Firewall" iconColor="#EF4444" />
-        <AssetCard icon={Lock} count={11} label="VPN Gateway" iconColor="#8B5CF6" />
-        <AssetCard icon={Network} count={11} label="Wireless Infrastructure" iconColor="#06B6D4" />
-        <AssetCard icon={Network} count={11} label="Cabling" iconColor="#64748B" />
-      </CollapsibleSection>
-
-      <CollapsibleSection title="Security">
-        <AssetCard icon={Lock} count={11} label="Identity & Access Management" iconColor="#EF4444" />
-        <AssetCard icon={Shield} count={11} label="Endpoint Security" iconColor="#DC2626" />
-        <AssetCard icon={Shield} count={11} label="SIEM" iconColor="#991B1B" />
-        <AssetCard icon={Lock} count={11} label="Security Appliance" iconColor="#7C2D12" />
-      </CollapsibleSection>
-
-      <CollapsibleSection title="Services">
-        <AssetCard icon={Wrench} count={11} label="Business Service" iconColor="#3B82F6" />
-        <AssetCard icon={Server} count={11} label="IT Service" iconColor="#8B5CF6" />
-        <AssetCard icon={HardDrive} count={11} label="Backup & Recovery" iconColor="#10B981" />
-        <AssetCard icon={Monitor} count={11} label="Monitoring & Logging" iconColor="#F59E0B" />
-      </CollapsibleSection>
-
-      <CollapsibleSection title="Documentation & Knowledge">
-        <AssetCard icon={FileText} count={11} label="Policy & SOP" iconColor="#3B82F6" />
-        <AssetCard icon={FileCode} count={11} label="Configuration File" iconColor="#8B5CF6" />
-        <AssetCard icon={FileText} count={11} label="Contracts & SLA" iconColor="#EC4899" />
-        <AssetCard icon={FileText} count={11} label="Knowledge Base" iconColor="#F59E0B" />
-      </CollapsibleSection>
-
-      <CollapsibleSection title="People & Organization">
-        <AssetCard icon={Users} count={11} label="User/End User" iconColor="#3B82F6" />
-        <AssetCard icon={Users} count={11} label="IT Staff" iconColor="#8B5CF6" />
-        <AssetCard icon={Users} count={11} label="Vendor/3rd Party" iconColor="#EC4899" />
-        <AssetCard icon={Users} count={11} label="Business Owner" iconColor="#F59E0B" />
-        <AssetCard icon={Users} count={11} label="Change Advisory Board (CAB)" iconColor="#10B981" />
-      </CollapsibleSection>
-
-      <CollapsibleSection title="Cloud & External Service">
-        <AssetCard icon={Cloud} count={11} label="Cloud Provider" iconColor="#3B82F6" />
-        <AssetCard icon={Cloud} count={11} label="Cloud Services" iconColor="#06B6D4" />
-        <AssetCard icon={Globe} count={11} label="SaaS Applications" iconColor="#8B5CF6" />
-        <AssetCard icon={Server} count={11} label="Hosting & Domain" iconColor="#10B981" />
-      </CollapsibleSection>
-
-      <CollapsibleSection title="Environment & Facility">
-        <AssetCard icon={Building} count={11} label="Building" iconColor="#64748B" />
-        <AssetCard icon={Building} count={11} label="Room" iconColor="#475569" />
-        <AssetCard icon={Building} count={11} label="Facility" iconColor="#334155" />
-        <AssetCard icon={Zap} count={11} label="Power Supply" iconColor="#F59E0B" />
-        <AssetCard icon={Wind} count={11} label="Cooling System" iconColor="#06B6D4" />
-      </CollapsibleSection>
+        {/* Recent Activity */}
+        <Card className="p-6 bg-white">
+          <h2 className="text-xl font-semibold mb-4" style={{ color: "#253040" }}>
+            Aktivitas Terbaru
+          </h2>
+          <div className="space-y-3">
+            {recentActivities.map((activity, index) => (
+              <div key={index} className="flex gap-3 pb-3 border-b last:border-b-0">
+                <span className="text-sm font-medium text-muted-foreground min-w-[50px]">
+                  {activity.time}
+                </span>
+                <span className="text-sm">{activity.text}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };

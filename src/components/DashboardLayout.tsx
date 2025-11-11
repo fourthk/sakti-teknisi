@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { Menu, Bell, User } from "lucide-react";
+import { Menu, Bell, User, LayoutDashboard, FileText, ClipboardCheck, CheckSquare, Calendar, Database, History } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Outlet, NavLink } from "react-router-dom";
 import saktiLogo from "@/assets/sakti-logo.png";
 
 const menuItems = [
-  { name: "Dashboard", path: "/", icon: "grid" },
-  { name: "Change Management", path: "/change-management", icon: "refresh" },
-  { name: "CMDB", path: "/cmdb", icon: "database" },
+  { name: "Dashboard", path: "/", icon: LayoutDashboard },
+  { name: "Daftar Laporan", path: "/change-request", icon: FileText },
+  { name: "Hasil Inspeksi", path: "/inspection-results", icon: ClipboardCheck },
+  { name: "Daftar Persetujuan", path: "/approval-list", icon: CheckSquare },
+  { name: "Jadwal Implementasi", path: "/implementation-schedule", icon: Calendar },
+  { name: "CMDB", path: "/cmdb", icon: Database },
+  { name: "Riwayat Pekerjaan", path: "/work-history", icon: History },
 ];
 
 const DashboardLayout = () => {
@@ -68,22 +72,26 @@ const DashboardLayout = () => {
         }}
       >
         <nav className="py-4">
-          {menuItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              end={item.path === "/"}
-              className={({ isActive }) =>
-                cn(
-                  "flex items-center gap-3 px-6 py-4 text-white transition-all",
-                  "hover:bg-[#2F4256]",
-                  isActive && "bg-[#2F4256] border-l-4 border-white"
-                )
-              }
-            >
-              <span className="text-lg">{item.name}</span>
-            </NavLink>
-          ))}
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                end={item.path === "/"}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center gap-3 px-6 py-4 text-white transition-all",
+                    "hover:bg-[#2F4256]",
+                    isActive && "bg-[#2F4256] border-l-4 border-white"
+                  )
+                }
+              >
+                <Icon size={20} />
+                <span className="text-base">{item.name}</span>
+              </NavLink>
+            );
+          })}
         </nav>
       </aside>
 

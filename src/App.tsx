@@ -5,14 +5,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./components/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
-import ChangeManagement from "./pages/ChangeManagement";
-import ChangeManagementDetail from "./pages/ChangeManagementDetail";
-import ChangeManagementCalendar from "./pages/ChangeManagementCalendar";
-import ChangeManagementForm from "./pages/ChangeManagementForm";
+import ChangeRequest from "./pages/ChangeRequest";
+import InspectionResults from "./pages/InspectionResults";
+import ApprovalList from "./pages/ApprovalList";
+import ImplementationSchedule from "./pages/ImplementationSchedule";
 import CMDB from "./pages/CMDB";
-import CMDBCategory from "./pages/CMDBCategory";
-import CMDBDetail from "./pages/CMDBDetail";
-import CMDBHistory from "./pages/CMDBHistory";
+import WorkHistory from "./pages/WorkHistory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,14 +24,12 @@ const App = () => (
         <Routes>
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/change-management" element={<ChangeManagement />} />
-            <Route path="/change-management/detail/:id" element={<ChangeManagementDetail />} />
-            <Route path="/change-management/form/:id" element={<ChangeManagementForm />} />
-            <Route path="/change-management/calendar" element={<ChangeManagementCalendar />} />
+            <Route path="/change-request" element={<ChangeRequest />} />
+            <Route path="/inspection-results" element={<InspectionResults />} />
+            <Route path="/approval-list" element={<ApprovalList />} />
+            <Route path="/implementation-schedule" element={<ImplementationSchedule />} />
             <Route path="/cmdb" element={<CMDB />} />
-            <Route path="/cmdb/:category" element={<CMDBCategory />} />
-            <Route path="/cmdb/detail/:id" element={<CMDBDetail />} />
-            <Route path="/cmdb/history/:id" element={<CMDBHistory />} />
+            <Route path="/work-history" element={<WorkHistory />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -1,24 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Server,
-  Network,
-  Laptop,
-  Truck,
-  FileCode,
-  Globe,
-  Lock,
-  Wrench,
-  FileText,
-  Users,
-  Cloud,
-  Building,
-  Search,
-  Filter,
-  MoreVertical,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -34,198 +17,200 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-interface CategoryCardProps {
-  icon: React.ElementType;
-  count: number;
-  label: string;
-  iconColor: string;
-  onClick: () => void;
-}
-
-const CategoryCard = ({ icon: Icon, count, label, iconColor, onClick }: CategoryCardProps) => {
-  return (
-    <button
-      onClick={onClick}
-      className="rounded-lg p-6 flex items-center gap-4 shadow-sm transition-all hover:shadow-md hover:scale-105 w-full text-left"
-      style={{
-        backgroundColor: "#FDFDFD",
-        border: "1px solid #384E66",
-      }}
-    >
-      <div
-        className="p-3 rounded-lg"
-        style={{ backgroundColor: iconColor + "20" }}
-      >
-        <Icon size={32} style={{ color: iconColor }} />
-      </div>
-      <div>
-        <div className="text-4xl font-bold" style={{ color: "#384E66" }}>
-          {count}
-        </div>
-        <div className="text-sm text-gray-600">{label}</div>
-      </div>
-    </button>
-  );
-};
-
-const mockAssets = [
-  {
-    id: 1,
-    category: "Infrastructure",
-    parentId: "PAR001",
-    assetId: "AST001",
-    assetType: "Server",
-    hostname: "srv-prod-01",
-    ipAddress: "192.168.1.10",
-    osName: "Ubuntu",
-    osVersion: "22.04 LTS",
-    vendor: "Dell",
-    location: "Data Center A",
-    ownerDepartment: "IT Operations",
-    responsiblePerson: "John Doe",
-    status: "Active",
-    description: "Production server for web applications",
-    created: "2024-01-15",
-    lastUpdate: "2024-03-10",
-  },
-  {
-    id: 2,
-    category: "Virtualization",
-    parentId: "PAR002",
-    assetId: "AST002",
-    assetType: "VM Host",
-    hostname: "vmhost-01",
-    ipAddress: "192.168.1.20",
-    osName: "VMware ESXi",
-    osVersion: "7.0",
-    vendor: "VMware",
-    location: "Data Center A",
-    ownerDepartment: "Infrastructure",
-    responsiblePerson: "Jane Smith",
-    status: "Active",
-    description: "Virtual machine host server",
-    created: "2024-01-20",
-    lastUpdate: "2024-03-08",
-  },
-  {
-    id: 3,
-    category: "Security",
-    parentId: "PAR003",
-    assetId: "AST003",
-    assetType: "Firewall",
-    hostname: "fw-edge-01",
-    ipAddress: "192.168.1.254",
-    osName: "Fortinet FortiOS",
-    osVersion: "7.2",
-    vendor: "Fortinet",
-    location: "Data Center A",
-    ownerDepartment: "Security Team",
-    responsiblePerson: "Bob Wilson",
-    status: "Maintenance",
-    description: "Edge firewall for network security",
-    created: "2024-02-01",
-    lastUpdate: "2024-03-12",
-  },
-];
+import { Search, MoreVertical, Plus, Edit } from "lucide-react";
 
 const CMDB = () => {
-  const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
-  const [selectedAsset, setSelectedAsset] = useState<typeof mockAssets[0] | null>(null);
-  const [newStatus, setNewStatus] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const categories = [
-    { icon: Server, count: 48, label: "Infrastructure", iconColor: "#3B82F6" },
-    { icon: Network, count: 156, label: "Virtualization", iconColor: "#8B5CF6" },
-    { icon: Laptop, count: 67, label: "End User Devices", iconColor: "#EC4899" },
-    { icon: Truck, count: 24, label: "Non-TI Supporting Assets", iconColor: "#F59E0B" },
-    { icon: FileCode, count: 89, label: "Software & Logical CI", iconColor: "#10B981" },
-    { icon: Globe, count: 32, label: "Network & Connectivity", iconColor: "#06B6D4" },
-    { icon: Lock, count: 45, label: "Security", iconColor: "#EF4444" },
-    { icon: Wrench, count: 28, label: "Services", iconColor: "#8B5CF6" },
-    { icon: FileText, count: 52, label: "Documentation & Knowledge", iconColor: "#3B82F6" },
-    { icon: Users, count: 120, label: "People & Organization", iconColor: "#EC4899" },
-    { icon: Cloud, count: 38, label: "Cloud & External Service", iconColor: "#06B6D4" },
-    { icon: Building, count: 15, label: "Environment & Facility", iconColor: "#64748B" },
+  const assets = [
+    {
+      id: "AST-001",
+      namaAsset: "Server Aplikasi Utama",
+      tipe: "Server",
+      lokasi: "Data Center - Rack A3",
+      ownerDinas: "Diskominfo",
+      statusOperasional: "Active",
+      konfigurasiRingkas: "Dell R740, 128GB RAM, 2TB Storage",
+      hubunganKeAssetLain: "Network Switch AST-015, Storage AST-023",
+      lastAuditDate: "2024-01-10",
+      catatan: "Critical production server",
+    },
+    {
+      id: "AST-002",
+      namaAsset: "Database Server",
+      tipe: "Server",
+      lokasi: "Data Center - Rack A4",
+      ownerDinas: "Diskominfo",
+      statusOperasional: "Active",
+      konfigurasiRingkas: "HP DL380, 256GB RAM, 4TB Storage",
+      hubunganKeAssetLain: "Backup Server AST-005",
+      lastAuditDate: "2024-01-11",
+      catatan: "PostgreSQL & MySQL instances",
+    },
+    {
+      id: "AST-003",
+      namaAsset: "Firewall UTM",
+      tipe: "Network Device",
+      lokasi: "Ruang Server Diskominfo",
+      ownerDinas: "Diskominfo",
+      statusOperasional: "Active",
+      konfigurasiRingkas: "Fortinet FortiGate 600E",
+      hubunganKeAssetLain: "Core Switch AST-010, Router AST-012",
+      lastAuditDate: "2024-01-08",
+      catatan: "Main security gateway",
+    },
+    {
+      id: "AST-004",
+      namaAsset: "Core Switch",
+      tipe: "Network Device",
+      lokasi: "Data Center - Rack B1",
+      ownerDinas: "Diskominfo",
+      statusOperasional: "Active",
+      konfigurasiRingkas: "Cisco Catalyst 9500, 48 ports",
+      hubunganKeAssetLain: "Firewall AST-003, Access Switches AST-016-020",
+      lastAuditDate: "2023-12-28",
+      catatan: "Recently replaced",
+    },
+    {
+      id: "AST-005",
+      namaAsset: "Backup Server",
+      tipe: "Server",
+      lokasi: "Data Center - Rack A5",
+      ownerDinas: "Diskominfo",
+      statusOperasional: "Active",
+      konfigurasiRingkas: "Synology RS3621xs+, 64GB RAM, 48TB",
+      hubunganKeAssetLain: "Database Server AST-002, File Server AST-007",
+      lastAuditDate: "2024-01-05",
+      catatan: "Daily automated backups",
+    },
+    {
+      id: "AST-006",
+      namaAsset: "Web Application Server",
+      tipe: "Server",
+      lokasi: "Data Center - Rack A3",
+      ownerDinas: "Dinas Pendidikan",
+      statusOperasional: "Maintenance",
+      konfigurasiRingkas: "VM on ESXi, 32GB RAM, 500GB Storage",
+      hubunganKeAssetLain: "Load Balancer AST-013",
+      lastAuditDate: "2023-12-15",
+      catatan: "Scheduled maintenance for software updates",
+    },
   ];
 
-  const handleCategoryClick = (label: string) => {
-    navigate(`/cmdb/${encodeURIComponent(label)}`);
+  const getStatusBadge = (status: string) => {
+    const variants: Record<string, string> = {
+      Active: "bg-green-100 text-green-800",
+      Maintenance: "bg-yellow-100 text-yellow-800",
+      Inactive: "bg-gray-100 text-gray-800",
+      Retired: "bg-red-100 text-red-800",
+    };
+    return (
+      <Badge className={`${variants[status]} border-0`}>
+        {status}
+      </Badge>
+    );
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "active":
-        return "bg-green-100 text-green-800 border-green-300";
-      case "inactive":
-        return "bg-gray-100 text-gray-800 border-gray-300";
-      case "maintenance":
-        return "bg-yellow-100 text-yellow-800 border-yellow-300";
-      default:
-        return "bg-blue-100 text-blue-800 border-blue-300";
-    }
-  };
-
-  const getCategoryColor = (cat: string) => {
-    return "bg-blue-100 text-blue-800 border-blue-300";
-  };
-
-  const handleChangeStatus = (asset: typeof mockAssets[0]) => {
-    setSelectedAsset(asset);
-    setNewStatus(asset.status);
-    setIsStatusModalOpen(true);
-  };
-
-  const handleStatusSubmit = () => {
-    // Handle status update logic here
-    setIsStatusModalOpen(false);
-    setSelectedAsset(null);
-  };
+  const filteredAssets = assets.filter((asset) =>
+    Object.values(asset).some((value) =>
+      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   return (
     <div>
-      <h1
-        className="text-5xl font-bold mb-8"
-        style={{ color: "#253040" }}
-      >
-        CMDB
-      </h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        {categories.map((category) => (
-          <CategoryCard
-            key={category.label}
-            icon={category.icon}
-            count={category.count}
-            label={category.label}
-            iconColor={category.iconColor}
-            onClick={() => handleCategoryClick(category.label)}
-          />
-        ))}
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-5xl font-bold" style={{ color: "#253040" }}>
+          CMDB
+        </h1>
+        <Button style={{ backgroundColor: "#384E66" }}>
+          <Plus className="mr-2" size={18} />
+          Tambah Aset
+        </Button>
       </div>
+
+      <Card className="bg-white p-6">
+        <div className="mb-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
+            <Input
+              placeholder="Cari berdasarkan Asset ID, nama, tipe, lokasi, atau owner..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Asset ID</TableHead>
+                <TableHead>Nama Asset</TableHead>
+                <TableHead>Tipe</TableHead>
+                <TableHead>Lokasi</TableHead>
+                <TableHead>Owner Dinas</TableHead>
+                <TableHead>Status Operasional</TableHead>
+                <TableHead>Konfigurasi Ringkas</TableHead>
+                <TableHead>Hubungan ke Asset Lain</TableHead>
+                <TableHead>Last Audit Date</TableHead>
+                <TableHead>Catatan</TableHead>
+                <TableHead className="text-right">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredAssets.map((asset) => (
+                <TableRow key={asset.id}>
+                  <TableCell className="font-medium">{asset.id}</TableCell>
+                  <TableCell className="font-medium">{asset.namaAsset}</TableCell>
+                  <TableCell>{asset.tipe}</TableCell>
+                  <TableCell>{asset.lokasi}</TableCell>
+                  <TableCell>{asset.ownerDinas}</TableCell>
+                  <TableCell>{getStatusBadge(asset.statusOperasional)}</TableCell>
+                  <TableCell className="max-w-xs">
+                    <div className="truncate">{asset.konfigurasiRingkas}</div>
+                  </TableCell>
+                  <TableCell className="max-w-xs">
+                    <div className="truncate text-sm text-muted-foreground">
+                      {asset.hubunganKeAssetLain}
+                    </div>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">{asset.lastAuditDate}</TableCell>
+                  <TableCell className="max-w-xs">
+                    <div className="truncate text-sm">{asset.catatan}</div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreVertical size={16} />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>
+                          <Edit size={14} className="mr-2" />
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>Detail</DropdownMenuItem>
+                        <DropdownMenuItem>View History</DropdownMenuItem>
+                        <DropdownMenuItem>View Relationships</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        <div className="mt-4 p-4 bg-muted/50 rounded-lg">
+          <p className="text-sm text-muted-foreground">
+            <strong>Note:</strong> CMDB aset hanya dapat diedit oleh pengguna dengan role yang diotorisasi. 
+            Semua perubahan akan tercatat dalam change log secara otomatis.
+          </p>
+        </div>
+      </Card>
     </div>
   );
 };

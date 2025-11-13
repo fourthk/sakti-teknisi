@@ -1,19 +1,26 @@
 import { useState } from "react";
-import { Menu, Bell, User } from "lucide-react";
+import { Menu, Bell, User, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, useLocation } from "react-router-dom";
 import saktiLogo from "@/assets/sakti-logo.png";
 
 const menuItems = [
   { name: "Dashboard", path: "/" },
-  { name: "Daftar Laporan", path: "/change-request" },
-  { name: "Daftar Persetujuan", path: "/approval-list" },
-  { name: "Jadwal Implementasi", path: "/implementation-schedule" },
+  { 
+    name: "Change Management", 
+    subItems: [
+      { name: "Daftar Laporan", path: "/change-request" },
+      { name: "Daftar Persetujuan", path: "/approval-list" },
+      { name: "Jadwal Implementasi", path: "/implementation-schedule" },
+    ]
+  },
   { name: "CMDB", path: "/cmdb" },
 ];
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [expandedMenu, setExpandedMenu] = useState<string | null>("Change Management");
+  const location = useLocation();
 
   return (
     <div className="min-h-screen bg-background w-full">
@@ -71,6 +78,52 @@ const DashboardLayout = () => {
       >
         <nav className="py-4">
           {menuItems.map((item) => {
+            if ('subItems' in item) {
+              const isExpanded = expandedMenu === item.name;
+              const hasActiveChild = item.subItems?.some(sub => location.pathname === sub.path);
+              
+              return (
+                <div key={item.name}>
+                  <button
+                    onClick={() => setExpandedMenu(isExpanded ? null : item.name)}
+                    className={cn(
+                      "w-full flex items-center justify-between px-6 py-4 text-white transition-all",
+                      "hover:bg-[#2F4256]",
+                      hasActiveChild && "bg-[#2F4256]"
+                    )}
+                  >
+                    <span className="text-base">{item.name}</span>
+                    <ChevronDown 
+                      size={18} 
+                      className={cn(
+                        "transition-transform duration-200",
+                        isExpanded && "rotate-180"
+                      )}
+                    />
+                  </button>
+                  {isExpanded && (
+                    <div className="bg-[#2F4256]">
+                      {item.subItems?.map((subItem) => (
+                        <NavLink
+                          key={subItem.path}
+                          to={subItem.path}
+                          className={({ isActive }) =>
+                            cn(
+                              "flex items-center gap-3 px-12 py-3 text-white transition-all text-sm",
+                              "hover:bg-[#27384A]",
+                              isActive && "bg-[#27384A] border-l-4 border-white"
+                            )
+                          }
+                        >
+                          <span>{subItem.name}</span>
+                        </NavLink>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            
             return (
               <NavLink
                 key={item.path}

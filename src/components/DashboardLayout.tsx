@@ -1,17 +1,15 @@
 import { useState } from "react";
-import { Menu, Bell, User, LayoutDashboard, FileText, ClipboardCheck, CheckSquare, Calendar, Database, History } from "lucide-react";
+import { Menu, Bell, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Outlet, NavLink } from "react-router-dom";
 import saktiLogo from "@/assets/sakti-logo.png";
 
 const menuItems = [
-  { name: "Dashboard", path: "/", icon: LayoutDashboard },
-  { name: "Daftar Laporan", path: "/change-request", icon: FileText },
-  { name: "Hasil Inspeksi", path: "/inspection-results", icon: ClipboardCheck },
-  { name: "Daftar Persetujuan", path: "/approval-list", icon: CheckSquare },
-  { name: "Jadwal Implementasi", path: "/implementation-schedule", icon: Calendar },
-  { name: "CMDB", path: "/cmdb", icon: Database },
-  { name: "Riwayat Pekerjaan", path: "/work-history", icon: History },
+  { name: "Dashboard", path: "/" },
+  { name: "Daftar Laporan", path: "/change-request" },
+  { name: "Daftar Persetujuan", path: "/approval-list" },
+  { name: "Jadwal Implementasi", path: "/implementation-schedule" },
+  { name: "CMDB", path: "/cmdb" },
 ];
 
 const DashboardLayout = () => {
@@ -73,7 +71,6 @@ const DashboardLayout = () => {
       >
         <nav className="py-4">
           {menuItems.map((item) => {
-            const Icon = item.icon;
             return (
               <NavLink
                 key={item.path}
@@ -87,7 +84,6 @@ const DashboardLayout = () => {
                   )
                 }
               >
-                <Icon size={20} />
                 <span className="text-base">{item.name}</span>
               </NavLink>
             );

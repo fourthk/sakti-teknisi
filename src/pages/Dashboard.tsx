@@ -55,9 +55,9 @@ const Dashboard = () => {
 
   const kpiData = [
     { label: "Total Laporan Hari Ini", value: "12", icon: FileText, color: "#3B82F6" },
-    { label: "Pending Inspeksi", value: "5", icon: Clock, color: "#F59E0B" },
-    { label: "Disetujui (Menunggu Jadwal)", value: "8", icon: CheckCircle, color: "#10B981" },
-    { label: "Jadwal Hari Ini", value: "3", icon: CalendarIcon, color: "#8B5CF6" },
+    { label: "Pending Inspeksi", value: "5", icon: Clock, color: "#3B82F6" },
+    { label: "Disetujui (Menunggu Jadwal)", value: "8", icon: CheckCircle, color: "#3B82F6" },
+    { label: "Jadwal Hari Ini", value: "3", icon: CalendarIcon, color: "#3B82F6" },
   ];
 
   const recentActivities = [

@@ -155,15 +155,30 @@ const ImplementationSchedule = () => {
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          className="hover:bg-muted/80 transition-all duration-200 hover:scale-105"
+                        >
                           <MoreVertical size={16} />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>Detail</DropdownMenuItem>
-                        <DropdownMenuItem>Edit Jadwal</DropdownMenuItem>
-                        <DropdownMenuItem>Update Status</DropdownMenuItem>
-                        <DropdownMenuItem>Cetak</DropdownMenuItem>
+                      <DropdownMenuContent 
+                        align="end"
+                        className="w-48 bg-white shadow-lg border border-border/50 animate-in fade-in-0 zoom-in-95 slide-in-from-top-2"
+                      >
+                        <DropdownMenuItem className="hover:bg-muted/80 cursor-pointer transition-colors duration-150 focus:bg-muted/80">
+                          Detail
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="hover:bg-muted/80 cursor-pointer transition-colors duration-150 focus:bg-muted/80">
+                          Edit Jadwal
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="hover:bg-muted/80 cursor-pointer transition-colors duration-150 focus:bg-muted/80">
+                          Update Status
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="hover:bg-muted/80 cursor-pointer transition-colors duration-150 focus:bg-muted/80">
+                          Cetak
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

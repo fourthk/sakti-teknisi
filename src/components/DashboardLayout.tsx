@@ -10,8 +10,9 @@ const menuItems = [
     name: "Change Management", 
     subItems: [
       { name: "Daftar Laporan", path: "/change-request" },
-      { name: "Daftar Persetujuan", path: "/approval-list" },
+      { name: "Buat Jadwal", path: "/create-schedule" },
       { name: "Jadwal Implementasi", path: "/implementation-schedule" },
+      { name: "Hasil Implementasi", path: "/implementation-results" },
     ]
   },
   { name: "CMDB", path: "/cmdb" },
@@ -19,7 +20,7 @@ const menuItems = [
 
 const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [expandedMenu, setExpandedMenu] = useState<string | null>("Change Management");
+  const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
   const location = useLocation();
 
   return (

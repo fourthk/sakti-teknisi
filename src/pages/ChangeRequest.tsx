@@ -17,18 +17,39 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Search, MoreVertical, Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const ChangeRequest = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
+  const [showStatusDialog, setShowStatusDialog] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<string | null>(null);
+  const [newStatus, setNewStatus] = useState("");
 
   const requests = [
     {
       id: "CR-2024-001",
       jenisPerubahan: "Update Server",
-      dinas: "Dinas Pendidikan",
+      kategoriTerdampak: "Hardware",
       asetTerdampak: "Server Aplikasi",
       status: "Submitted",
       resiko: "",
@@ -38,9 +59,9 @@ const ChangeRequest = () => {
     {
       id: "CR-2024-002",
       jenisPerubahan: "Instalasi Software",
-      dinas: "Dinas Kesehatan",
+      kategoriTerdampak: "Software",
       asetTerdampak: "PC Admin",
-      status: "Inspected",
+      status: "Reviewed",
       resiko: "Low",
       jadwal: "",
       tanggalDiterima: "2024-01-14",
@@ -48,7 +69,7 @@ const ChangeRequest = () => {
     {
       id: "CR-2024-003",
       jenisPerubahan: "Penggantian Hardware",
-      dinas: "Diskominfo",
+      kategoriTerdampak: "Network",
       asetTerdampak: "Switch Network",
       status: "Approved",
       resiko: "Medium",
@@ -58,7 +79,7 @@ const ChangeRequest = () => {
     {
       id: "CR-2024-004",
       jenisPerubahan: "Konfigurasi Jaringan",
-      dinas: "Dinas Perhubungan",
+      kategoriTerdampak: "Network",
       asetTerdampak: "Router Core",
       status: "Scheduled",
       resiko: "High",
@@ -68,12 +89,32 @@ const ChangeRequest = () => {
     {
       id: "CR-2024-005",
       jenisPerubahan: "Maintenance Rutin",
-      dinas: "Dinas Keuangan",
+      kategoriTerdampak: "Hardware",
       asetTerdampak: "Database Server",
-      status: "Implemented",
+      status: "Implementing",
       resiko: "Low",
       jadwal: "2024-01-10",
       tanggalDiterima: "2024-01-08",
+    },
+    {
+      id: "CR-2024-006",
+      jenisPerubahan: "Update Firmware",
+      kategoriTerdampak: "Network",
+      asetTerdampak: "Firewall",
+      status: "Completed",
+      resiko: "Medium",
+      jadwal: "2024-01-09",
+      tanggalDiterima: "2024-01-07",
+    },
+    {
+      id: "CR-2024-007",
+      jenisPerubahan: "Instalasi Hardware",
+      kategoriTerdampak: "Hardware",
+      asetTerdampak: "UPS Backup",
+      status: "Failed",
+      resiko: "Low",
+      jadwal: "2024-01-08",
+      tanggalDiterima: "2024-01-06",
     },
   ];
 
@@ -107,11 +148,39 @@ const ChangeRequest = () => {
     );
   };
 
-  const filteredRequests = requests.filter((req) =>
+  const statusFilter = searchParams.get("status");
+  
+  let filteredRequests = requests.filter((req) =>
     Object.values(req).some((value) =>
       value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
+
+  if (statusFilter) {
+    filteredRequests = filteredRequests.filter((req) => req.status === statusFilter);
+  }
+
+  const handleStatusClick = (requestId: string) => {
+    setSelectedRequest(requestId);
+    setNewStatus("");
+    setShowStatusDialog(true);
+  };
+
+  const handleStatusChange = () => {
+    if (!newStatus) {
+      toast.error("Pilih status terlebih dahulu");
+      return;
+    }
+    setShowStatusDialog(false);
+    setShowConfirmDialog(true);
+  };
+
+  const confirmStatusChange = () => {
+    setShowConfirmDialog(false);
+    toast.success("Status berhasil diubah");
+    setSelectedRequest(null);
+    setNewStatus("");
+  };
 
   return (
     <div>
@@ -144,7 +213,7 @@ const ChangeRequest = () => {
               <TableRow>
                 <TableHead>Request ID</TableHead>
                 <TableHead>Jenis Perubahan</TableHead>
-                <TableHead>Dinas</TableHead>
+                <TableHead>Kategori Terdampak</TableHead>
                 <TableHead>Aset Terdampak</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Resiko</TableHead>
@@ -158,7 +227,7 @@ const ChangeRequest = () => {
                 <TableRow key={request.id}>
                   <TableCell className="font-medium">{request.id}</TableCell>
                   <TableCell>{request.jenisPerubahan}</TableCell>
-                  <TableCell>{request.dinas}</TableCell>
+                  <TableCell>{request.kategoriTerdampak}</TableCell>
                   <TableCell>{request.asetTerdampak}</TableCell>
                   <TableCell>{getStatusBadge(request.status)}</TableCell>
                   <TableCell>{getRiskBadge(request.resiko)}</TableCell>
@@ -174,9 +243,12 @@ const ChangeRequest = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>Detail</DropdownMenuItem>
-                        <DropdownMenuItem>Update Status</DropdownMenuItem>
-                        <DropdownMenuItem>Inspeksi</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate(`/change-request/${request.id}`)}>
+                          Detail
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleStatusClick(request.id)}>
+                          Ubah Status
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -186,6 +258,59 @@ const ChangeRequest = () => {
           </Table>
         </div>
       </Card>
+
+      {/* Status Change Dialog */}
+      <Dialog open={showStatusDialog} onOpenChange={setShowStatusDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Ubah Status</DialogTitle>
+            <DialogDescription>
+              Pilih status baru untuk request {selectedRequest}
+            </DialogDescription>
+          </DialogHeader>
+          <Select value={newStatus} onValueChange={setNewStatus}>
+            <SelectTrigger>
+              <SelectValue placeholder="Pilih status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Reviewed">Reviewed</SelectItem>
+              <SelectItem value="Approved">Approved</SelectItem>
+              <SelectItem value="Scheduled">Scheduled</SelectItem>
+              <SelectItem value="Implementing">Implementing</SelectItem>
+              <SelectItem value="Completed">Completed</SelectItem>
+              <SelectItem value="Failed">Failed</SelectItem>
+            </SelectContent>
+          </Select>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowStatusDialog(false)}>
+              Batal
+            </Button>
+            <Button onClick={handleStatusChange} style={{ backgroundColor: "#384E66" }}>
+              OK
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Konfirmasi Perubahan</DialogTitle>
+            <DialogDescription>
+              Tindakan ini akan mengubah status. Yakin ingin melakukan perubahan?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowConfirmDialog(false)}>
+              Batal
+            </Button>
+            <Button onClick={confirmStatusChange} style={{ backgroundColor: "#384E66" }}>
+              Ya
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

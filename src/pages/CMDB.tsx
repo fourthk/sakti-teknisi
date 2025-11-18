@@ -1,121 +1,19 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Search, MoreVertical, Plus, Edit } from "lucide-react";
+import { Server, Network, Monitor, HardDrive, Wifi, Database } from "lucide-react";
 
 const CMDB = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
-  const assets = [
-    {
-      id: "AST-001",
-      namaAsset: "Server Aplikasi Utama",
-      tipe: "Server",
-      lokasi: "Data Center - Rack A3",
-      ownerDinas: "Diskominfo",
-      statusOperasional: "Active",
-      konfigurasiRingkas: "Dell R740, 128GB RAM, 2TB Storage",
-      hubunganKeAssetLain: "Network Switch AST-015, Storage AST-023",
-      lastAuditDate: "2024-01-10",
-      catatan: "Critical production server",
-    },
-    {
-      id: "AST-002",
-      namaAsset: "Database Server",
-      tipe: "Server",
-      lokasi: "Data Center - Rack A4",
-      ownerDinas: "Diskominfo",
-      statusOperasional: "Active",
-      konfigurasiRingkas: "HP DL380, 256GB RAM, 4TB Storage",
-      hubunganKeAssetLain: "Backup Server AST-005",
-      lastAuditDate: "2024-01-11",
-      catatan: "PostgreSQL & MySQL instances",
-    },
-    {
-      id: "AST-003",
-      namaAsset: "Firewall UTM",
-      tipe: "Network Device",
-      lokasi: "Ruang Server Diskominfo",
-      ownerDinas: "Diskominfo",
-      statusOperasional: "Active",
-      konfigurasiRingkas: "Fortinet FortiGate 600E",
-      hubunganKeAssetLain: "Core Switch AST-010, Router AST-012",
-      lastAuditDate: "2024-01-08",
-      catatan: "Main security gateway",
-    },
-    {
-      id: "AST-004",
-      namaAsset: "Core Switch",
-      tipe: "Network Device",
-      lokasi: "Data Center - Rack B1",
-      ownerDinas: "Diskominfo",
-      statusOperasional: "Active",
-      konfigurasiRingkas: "Cisco Catalyst 9500, 48 ports",
-      hubunganKeAssetLain: "Firewall AST-003, Access Switches AST-016-020",
-      lastAuditDate: "2023-12-28",
-      catatan: "Recently replaced",
-    },
-    {
-      id: "AST-005",
-      namaAsset: "Backup Server",
-      tipe: "Server",
-      lokasi: "Data Center - Rack A5",
-      ownerDinas: "Diskominfo",
-      statusOperasional: "Active",
-      konfigurasiRingkas: "Synology RS3621xs+, 64GB RAM, 48TB",
-      hubunganKeAssetLain: "Database Server AST-002, File Server AST-007",
-      lastAuditDate: "2024-01-05",
-      catatan: "Daily automated backups",
-    },
-    {
-      id: "AST-006",
-      namaAsset: "Web Application Server",
-      tipe: "Server",
-      lokasi: "Data Center - Rack A3",
-      ownerDinas: "Dinas Pendidikan",
-      statusOperasional: "Maintenance",
-      konfigurasiRingkas: "VM on ESXi, 32GB RAM, 500GB Storage",
-      hubunganKeAssetLain: "Load Balancer AST-013",
-      lastAuditDate: "2023-12-15",
-      catatan: "Scheduled maintenance for software updates",
-    },
+  const categories = [
+    { name: "Server", icon: Server, count: 12, color: "#3B82F6" },
+    { name: "Network", icon: Network, count: 24, color: "#10B981" },
+    { name: "Workstation", icon: Monitor, count: 156, color: "#F59E0B" },
+    { name: "Storage", icon: HardDrive, count: 8, color: "#8B5CF6" },
+    { name: "Wireless", icon: Wifi, count: 32, color: "#EC4899" },
+    { name: "Database", icon: Database, count: 6, color: "#14B8A6" },
   ];
 
-  const getStatusBadge = (status: string) => {
-    const variants: Record<string, string> = {
-      Active: "bg-green-100 text-green-800",
-      Maintenance: "bg-yellow-100 text-yellow-800",
-      Inactive: "bg-gray-100 text-gray-800",
-      Retired: "bg-red-100 text-red-800",
-    };
-    return (
-      <Badge className={`${variants[status]} border-0`}>
-        {status}
-      </Badge>
-    );
-  };
-
-  const filteredAssets = assets.filter((asset) =>
-    Object.values(asset).some((value) =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
 
   return (
     <div>

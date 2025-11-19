@@ -81,15 +81,15 @@ const ImplementationResults = () => {
         Hasil Implementasi
       </h1>
 
-      <Card className="bg-white p-6">
-        <div className="mb-4">
-          <div className="relative">
+      <Card className="bg-white border-2 border-primary/20">
+        <div className="p-4 border-b-2 border-primary/20">
+          <div className="relative border-2 border-primary/30 rounded-md overflow-hidden">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
             <Input
               placeholder="Cari berdasarkan ID, request, teknisi, atau aset..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 border-0 focus-visible:ring-0"
             />
           </div>
         </div>

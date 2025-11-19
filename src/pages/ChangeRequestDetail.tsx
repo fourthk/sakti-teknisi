@@ -182,19 +182,19 @@ const ChangeRequestDetail = () => {
           </h2>
           <div className="flex items-center gap-4">
             <Select value={authority} onValueChange={setAuthority} disabled={submitted}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-[200px] border-2 border-primary/30">
                 <SelectValue placeholder="Pilih wewenang" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Minor">Minor</SelectItem>
-                <SelectItem value="Standar">Standar</SelectItem>
-                <SelectItem value="Mayor">Mayor</SelectItem>
+              <SelectContent className="bg-popover border-2 border-primary/30">
+                <SelectItem value="Minor" className="text-foreground">Minor</SelectItem>
+                <SelectItem value="Standar" className="text-foreground">Standar</SelectItem>
+                <SelectItem value="Mayor" className="text-foreground">Mayor</SelectItem>
               </SelectContent>
             </Select>
             <Button
               onClick={handleSubmit}
               disabled={!authority || submitted}
-              style={{ backgroundColor: "#384E66" }}
+              className="bg-primary hover:bg-primary/90"
             >
               Kirim Pengajuan
             </Button>
@@ -233,18 +233,18 @@ const ChangeRequestDetail = () => {
 
       {/* Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <DialogContent>
+        <DialogContent className="bg-popover border-2 border-primary/30">
           <DialogHeader>
-            <DialogTitle>Konfirmasi Pengajuan</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-foreground">Konfirmasi Pengajuan</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
               Tindakan ini akan mengirim pengajuan ke pihak yang berwenang. Yakin ingin melakukan perubahan?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowConfirmDialog(false)}>
+            <Button variant="outline" onClick={() => setShowConfirmDialog(false)} className="border-2 border-primary/30">
               Batal
             </Button>
-            <Button onClick={confirmSubmit} style={{ backgroundColor: "#384E66" }}>
+            <Button onClick={confirmSubmit} className="bg-primary hover:bg-primary/90">
               Ya
             </Button>
           </DialogFooter>

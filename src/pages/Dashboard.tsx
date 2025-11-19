@@ -111,51 +111,6 @@ const Dashboard = () => {
           <Bar data={weeklyData} options={chartOptions} />
         </div>
       </Card>
-
-      {/* Quick Actions & Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Quick Actions */}
-        <Card className="p-6 bg-white">
-          <h2 className="text-xl font-semibold mb-4" style={{ color: "#253040" }}>
-            Aksi Cepat
-          </h2>
-          <div className="space-y-3">
-            <Button 
-              className="w-full justify-start"
-              style={{ backgroundColor: "#384E66" }}
-              onClick={() => navigate('/change-request')}
-            >
-              <Plus className="mr-2" size={18} />
-              Buat Laporan (Mobile)
-            </Button>
-            <Button 
-              className="w-full justify-start"
-              variant="outline"
-              onClick={() => navigate('/implementation-schedule')}
-            >
-              <CalendarIcon className="mr-2" size={18} />
-              Buat Jadwal
-            </Button>
-          </div>
-        </Card>
-
-        {/* Recent Activity */}
-        <Card className="p-6 bg-white">
-          <h2 className="text-xl font-semibold mb-4" style={{ color: "#253040" }}>
-            Aktivitas Terbaru
-          </h2>
-          <div className="space-y-3">
-            {recentActivities.map((activity, index) => (
-              <div key={index} className="flex gap-3 pb-3 border-b last:border-b-0">
-                <span className="text-sm font-medium text-muted-foreground min-w-[50px]">
-                  {activity.time}
-                </span>
-                <span className="text-sm">{activity.text}</span>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
     </div>
   );
 };

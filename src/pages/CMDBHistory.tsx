@@ -1,127 +1,150 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Clock } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
+const mockHistory = [
+  {
+    historyId: "HIS001",
+    assetId: "AST001",
+    changeType: "Status Update",
+    oldValue: "Maintenance",
+    newValue: "Active",
+    changedBy: "John Doe",
+    changedAt: "2024-03-10 14:35:22",
+  },
+  {
+    historyId: "HIS002",
+    assetId: "AST001",
+    changeType: "IP Address",
+    oldValue: "192.168.1.9",
+    newValue: "192.168.1.10",
+    changedBy: "Jane Smith",
+    changedAt: "2024-03-05 09:20:15",
+  },
+  {
+    historyId: "HIS003",
+    assetId: "AST001",
+    changeType: "OS Version",
+    oldValue: "Ubuntu 20.04 LTS",
+    newValue: "Ubuntu 22.04 LTS",
+    changedBy: "John Doe",
+    changedAt: "2024-02-28 16:45:00",
+  },
+  {
+    historyId: "HIS004",
+    assetId: "AST001",
+    changeType: "Location",
+    oldValue: "Data Center B - Rack 5",
+    newValue: "Data Center A - Rack 12",
+    changedBy: "IT Admin",
+    changedAt: "2024-02-15 11:10:30",
+  },
+];
 
 const CMDBHistory = () => {
   const navigate = useNavigate();
-  const { category, id } = useParams();
-
-  const history = [
-    {
-      id: 1,
-      timestamp: "2024-01-18 14:30:00",
-      user: "Ahmad Rizki",
-      action: "Update",
-      field: "Lokasi",
-      oldValue: "Ruang IT Lantai 1",
-      newValue: "Ruang IT Lantai 2",
-    },
-    {
-      id: 2,
-      timestamp: "2024-01-15 09:15:00",
-      user: "Siti Nurhaliza",
-      action: "Update",
-      field: "Status",
-      oldValue: "Maintenance",
-      newValue: "Aktif",
-    },
-    {
-      id: 3,
-      timestamp: "2024-01-10 16:45:00",
-      user: "Budi Santoso",
-      action: "Update",
-      field: "OS Version",
-      oldValue: "10 Pro",
-      newValue: "11 Pro",
-    },
-    {
-      id: 4,
-      timestamp: "2023-12-20 11:20:00",
-      user: "Ahmad Rizki",
-      action: "Update",
-      field: "IP Address",
-      oldValue: "192.168.1.45",
-      newValue: "192.168.1.50",
-    },
-    {
-      id: 5,
-      timestamp: "2023-06-15 08:00:00",
-      user: "System",
-      action: "Create",
-      field: "Initial Entry",
-      oldValue: "-",
-      newValue: "Asset Created",
-    },
-  ];
+  const { id } = useParams();
+  const [currentPage, setCurrentPage] = useState(1);
 
   return (
     <div>
-      <Button
-        variant="ghost"
-        className="mb-4"
-        onClick={() => navigate(`/cmdb/${category}`)}
-      >
-        <ArrowLeft className="mr-2" size={18} />
-        Kembali
-      </Button>
-
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-4 mb-8">
+        <button
+          onClick={() => navigate(-1)}
+          className="text-gray-600 hover:text-gray-900 transition-colors"
+          aria-label="Back"
+        >
+          <ArrowLeft size={24} />
+        </button>
         <h1 className="text-5xl font-bold" style={{ color: "#253040" }}>
-          Riwayat Perubahan
+          Change History
         </h1>
-        <Badge className="bg-primary/10 text-primary border-primary/30 border text-sm px-3 py-1">
-          {id}
-        </Badge>
       </div>
 
-      <div className="space-y-4">
-        {history.map((entry) => (
-          <Card key={entry.id} className="bg-white p-6 border-2 border-primary/20 hover:border-primary/40 transition-colors">
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-3">
-                  <Clock className="text-primary" size={18} />
-                  <span className="font-semibold text-foreground">{entry.timestamp}</span>
-                  <Badge className={`${
-                    entry.action === "Create" 
-                      ? "bg-blue-100 text-blue-800" 
-                      : entry.action === "Update"
-                      ? "bg-orange-100 text-orange-800"
-                      : "bg-red-100 text-red-800"
-                  } border-0`}>
-                    {entry.action}
-                  </Badge>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ml-9">
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">Pengguna</p>
-                    <p className="font-semibold text-foreground">{entry.user}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">Field</p>
-                    <p className="font-semibold text-foreground">{entry.field}</p>
-                  </div>
-                  {entry.action !== "Create" && (
-                    <>
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-1">Nilai Lama</p>
-                        <p className="font-medium text-red-600">{entry.oldValue}</p>
-                      </div>
-                      <div className="md:col-start-3">
-                        <p className="text-sm text-muted-foreground mb-1">Nilai Baru</p>
-                        <p className="font-medium text-green-600">{entry.newValue}</p>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </Card>
-        ))}
+      {/* History Table */}
+      <div
+        className="rounded-lg overflow-hidden shadow-sm mb-6"
+        style={{
+          backgroundColor: "#FFFFFF",
+          border: "1px solid #E5E7EB",
+        }}
+      >
+        <Table>
+          <TableHeader>
+            <TableRow style={{ backgroundColor: "#384E66" }}>
+              <TableHead className="text-white font-semibold">History ID</TableHead>
+              <TableHead className="text-white font-semibold">Asset ID</TableHead>
+              <TableHead className="text-white font-semibold">Change Type</TableHead>
+              <TableHead className="text-white font-semibold">Old Value</TableHead>
+              <TableHead className="text-white font-semibold">New Value</TableHead>
+              <TableHead className="text-white font-semibold">Changed By</TableHead>
+              <TableHead className="text-white font-semibold">Changed At</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {mockHistory.map((record) => (
+              <TableRow key={record.historyId} className="hover:bg-gray-50">
+                <TableCell className="font-medium">{record.historyId}</TableCell>
+                <TableCell>{record.assetId}</TableCell>
+                <TableCell>{record.changeType}</TableCell>
+                <TableCell className="text-gray-600">{record.oldValue}</TableCell>
+                <TableCell className="text-green-700 font-medium">{record.newValue}</TableCell>
+                <TableCell>{record.changedBy}</TableCell>
+                <TableCell>{record.changedAt}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
+
+      {/* Pagination */}
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+              className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+            />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink isActive={currentPage === 1} onClick={() => setCurrentPage(1)}>
+              1
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink isActive={currentPage === 2} onClick={() => setCurrentPage(2)}>
+              2
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink isActive={currentPage === 3} onClick={() => setCurrentPage(3)}>
+              3
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext
+              onClick={() => setCurrentPage(Math.min(3, currentPage + 1))}
+              className={currentPage === 3 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 };

@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
-import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Search, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 const ImplementationSchedule = () => {
@@ -67,9 +68,18 @@ const ImplementationSchedule = () => {
 
   return (
     <div>
-      <h1 className="text-5xl font-bold mb-8" style={{ color: "#253040" }}>
-        Jadwal Implementasi
-      </h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-5xl font-bold" style={{ color: "#253040" }}>
+          Jadwal Implementasi
+        </h1>
+        <Button 
+          onClick={() => navigate("/create-schedule")}
+          className="bg-primary hover:bg-primary/90"
+        >
+          <Plus className="mr-2" size={18} />
+          Buat Jadwal
+        </Button>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Calendar */}
@@ -81,30 +91,30 @@ const ImplementationSchedule = () => {
             mode="single"
             selected={selectedDate}
             onSelect={setSelectedDate}
-            className="rounded-md border"
             modifiers={{
               scheduled: scheduleDates,
             }}
             modifiersStyles={{
               scheduled: {
-                backgroundColor: "#3B82F6",
-                color: "white",
-                fontWeight: "bold",
+                position: "relative",
               },
+            }}
+            modifiersClassNames={{
+              scheduled: "bg-primary text-primary-foreground rounded-full font-bold after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1.5 after:h-1.5 after:bg-blue-500 after:rounded-full",
             }}
           />
         </Card>
 
         {/* Schedule List */}
-        <Card className="bg-white p-6 lg:col-span-2">
+        <Card className="bg-white p-6 lg:col-span-2 border-2 border-primary/20">
           <div className="mb-4">
-            <div className="relative">
+            <div className="relative border-2 border-primary/30 rounded-md overflow-hidden">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
               <Input
                 placeholder="Cari berdasarkan ID, jenis, lokasi, atau aset..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 border-0 focus-visible:ring-0"
               />
             </div>
           </div>

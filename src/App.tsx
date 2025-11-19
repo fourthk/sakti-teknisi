@@ -14,6 +14,9 @@ import ImplementationResults from "./pages/ImplementationResults";
 import ImplementationDetail from "./pages/ImplementationDetail";
 import CMDB from "./pages/CMDB";
 import CMDBCategory from "./pages/CMDBCategory";
+import CMDBDetail from "./pages/CMDBDetail";
+import CMDBEdit from "./pages/CMDBEdit";
+import CMDBHistory from "./pages/CMDBHistory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +39,9 @@ const App = () => (
             <Route path="/implementation-results/:id" element={<ImplementationDetail />} />
             <Route path="/cmdb" element={<CMDB />} />
             <Route path="/cmdb/:category" element={<CMDBCategory />} />
+            <Route path="/cmdb/:category/:id/detail" element={<CMDBDetail />} />
+            <Route path="/cmdb/:category/:id/edit" element={<CMDBEdit />} />
+            <Route path="/cmdb/:category/:id/history" element={<CMDBHistory />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -184,25 +184,21 @@ const ChangeRequest = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="mb-8">
         <h1 className="text-5xl font-bold" style={{ color: "#253040" }}>
           Daftar Laporan
         </h1>
-        <Button style={{ backgroundColor: "#384E66" }}>
-          <Plus className="mr-2" size={18} />
-          Buat Laporan Baru
-        </Button>
       </div>
 
-      <Card className="bg-white p-6">
-        <div className="mb-4">
-          <div className="relative">
+      <Card className="bg-white border-2 border-primary/20">
+        <div className="p-4 border-b-2 border-primary/20">
+          <div className="relative border-2 border-primary/30 rounded-md overflow-hidden">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
             <Input
               placeholder="Cari berdasarkan ID, jenis perubahan, dinas, atau aset..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 border-0 focus-visible:ring-0"
             />
           </div>
         </div>
@@ -242,11 +238,17 @@ const ChangeRequest = () => {
                           <MoreVertical size={16} />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => navigate(`/change-request/${request.id}`)}>
+                      <DropdownMenuContent align="end" className="bg-popover border-2 border-primary/30">
+                        <DropdownMenuItem 
+                          onClick={() => navigate(`/change-request/${request.id}`)}
+                          className="text-foreground cursor-pointer"
+                        >
                           Detail
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleStatusClick(request.id)}>
+                        <DropdownMenuItem 
+                          onClick={() => handleStatusClick(request.id)}
+                          className="text-foreground cursor-pointer"
+                        >
                           Ubah Status
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -261,31 +263,31 @@ const ChangeRequest = () => {
 
       {/* Status Change Dialog */}
       <Dialog open={showStatusDialog} onOpenChange={setShowStatusDialog}>
-        <DialogContent>
+        <DialogContent className="bg-popover border-2 border-primary/30">
           <DialogHeader>
-            <DialogTitle>Ubah Status</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-foreground">Ubah Status</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
               Pilih status baru untuk request {selectedRequest}
             </DialogDescription>
           </DialogHeader>
           <Select value={newStatus} onValueChange={setNewStatus}>
-            <SelectTrigger>
+            <SelectTrigger className="border-2 border-primary/30">
               <SelectValue placeholder="Pilih status" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Reviewed">Reviewed</SelectItem>
-              <SelectItem value="Approved">Approved</SelectItem>
-              <SelectItem value="Scheduled">Scheduled</SelectItem>
-              <SelectItem value="Implementing">Implementing</SelectItem>
-              <SelectItem value="Completed">Completed</SelectItem>
-              <SelectItem value="Failed">Failed</SelectItem>
+            <SelectContent className="bg-popover border-2 border-primary/30">
+              <SelectItem value="Reviewed" className="text-foreground">Reviewed</SelectItem>
+              <SelectItem value="Approved" className="text-foreground">Approved</SelectItem>
+              <SelectItem value="Scheduled" className="text-foreground">Scheduled</SelectItem>
+              <SelectItem value="Implementing" className="text-foreground">Implementing</SelectItem>
+              <SelectItem value="Completed" className="text-foreground">Completed</SelectItem>
+              <SelectItem value="Failed" className="text-foreground">Failed</SelectItem>
             </SelectContent>
           </Select>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowStatusDialog(false)}>
+            <Button variant="outline" onClick={() => setShowStatusDialog(false)} className="border-2 border-primary/30">
               Batal
             </Button>
-            <Button onClick={handleStatusChange} style={{ backgroundColor: "#384E66" }}>
+            <Button onClick={handleStatusChange} className="bg-primary hover:bg-primary/90">
               OK
             </Button>
           </DialogFooter>
@@ -294,18 +296,18 @@ const ChangeRequest = () => {
 
       {/* Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <DialogContent>
+        <DialogContent className="bg-popover border-2 border-primary/30">
           <DialogHeader>
-            <DialogTitle>Konfirmasi Perubahan</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-foreground">Konfirmasi Perubahan</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
               Tindakan ini akan mengubah status. Yakin ingin melakukan perubahan?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowConfirmDialog(false)}>
+            <Button variant="outline" onClick={() => setShowConfirmDialog(false)} className="border-2 border-primary/30">
               Batal
             </Button>
-            <Button onClick={confirmStatusChange} style={{ backgroundColor: "#384E66" }}>
+            <Button onClick={confirmStatusChange} className="bg-primary hover:bg-primary/90">
               Ya
             </Button>
           </DialogFooter>

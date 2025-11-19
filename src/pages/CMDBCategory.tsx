@@ -107,15 +107,15 @@ const CMDBCategory = () => {
         </Button>
       </div>
 
-      <Card className="bg-white p-6">
-        <div className="mb-4">
-          <div className="relative">
+      <Card className="bg-white border-2 border-primary/20">
+        <div className="p-4 border-b-2 border-primary/20">
+          <div className="relative border-2 border-primary/30 rounded-md overflow-hidden">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
             <Input
               placeholder="Cari aset..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 border-0 focus-visible:ring-0"
             />
           </div>
         </div>
@@ -157,14 +157,23 @@ const CMDBCategory = () => {
                           <MoreVertical size={16} />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => navigate(`/cmdb/${category}/${asset.id}`)}>
+                      <DropdownMenuContent align="end" className="bg-popover border-2 border-primary/30">
+                        <DropdownMenuItem 
+                          onClick={() => navigate(`/cmdb/${category}/${asset.id}/detail`)}
+                          className="text-foreground cursor-pointer"
+                        >
                           Detail
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate(`/cmdb/${category}/${asset.id}/edit`)}>
+                        <DropdownMenuItem 
+                          onClick={() => navigate(`/cmdb/${category}/${asset.id}/edit`)}
+                          className="text-foreground cursor-pointer"
+                        >
                           Ubah
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate(`/cmdb/${category}/${asset.id}/history`)}>
+                        <DropdownMenuItem 
+                          onClick={() => navigate(`/cmdb/${category}/${asset.id}/history`)}
+                          className="text-foreground cursor-pointer"
+                        >
                           Riwayat
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -179,18 +188,18 @@ const CMDBCategory = () => {
 
       {/* Update Confirmation Dialog */}
       <Dialog open={showUpdateDialog} onOpenChange={setShowUpdateDialog}>
-        <DialogContent>
+        <DialogContent className="bg-popover border-2 border-primary/30">
           <DialogHeader>
-            <DialogTitle>Konfirmasi Update</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-foreground">Konfirmasi Update</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
               Tindakan ini akan memperbarui data seluruh pihak berwenang. Yakin ingin melakukan perubahan?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowUpdateDialog(false)}>
+            <Button variant="outline" onClick={() => setShowUpdateDialog(false)} className="border-2 border-primary/30">
               Tidak
             </Button>
-            <Button onClick={confirmUpdate} style={{ backgroundColor: "#384E66" }}>
+            <Button onClick={confirmUpdate} className="bg-primary hover:bg-primary/90">
               Ya
             </Button>
           </DialogFooter>

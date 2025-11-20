@@ -1,115 +1,210 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Monitor, Server, Printer, Network as NetworkIcon, Laptop, HardDrive, FileCode, Shield, Globe, Database as DatabaseIcon, Building2, File } from "lucide-react";
-
-interface SubCategoryCardProps {
-  icon: React.ElementType;
-  count: number;
-  label: string;
-  iconColor: string;
-  onClick: () => void;
-}
-
-const SubCategoryCard = ({ icon: Icon, count, label, iconColor, onClick }: SubCategoryCardProps) => {
-  return (
-    <button
-      onClick={onClick}
-      className="rounded-lg p-6 flex items-center gap-4 shadow-sm transition-all hover:shadow-md hover:scale-105 w-full text-left"
-      style={{
-        backgroundColor: "#FDFDFD",
-        border: "1px solid #384E66",
-      }}
-    >
-      <div
-        className="p-3 rounded-lg"
-        style={{ backgroundColor: iconColor + "20" }}
-      >
-        <Icon size={28} style={{ color: iconColor }} />
-      </div>
-      <div>
-        <div className="text-3xl font-bold" style={{ color: "#384E66" }}>
-          {count}
-        </div>
-        <div className="text-sm text-gray-600">{label}</div>
-      </div>
-    </button>
-  );
-};
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Search, ArrowLeft, MoreVertical } from "lucide-react";
+import { toast } from "sonner";
 
 const CMDBCategory = () => {
-  const { category } = useParams();
   const navigate = useNavigate();
+  const { category } = useParams();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
 
-  // Define subcategories for each main category
-  const subcategoriesMap: Record<string, Array<{icon: React.ElementType, count: number, label: string, iconColor: string}>> = {
-    "Perangkat Keras (Hardware)": [
-      { icon: Monitor, count: 15, label: "Komputer dan Perangkat Personal", iconColor: "#3B82F6" },
-      { icon: Server, count: 8, label: "Server & Penyimpanan", iconColor: "#8B5CF6" },
-      { icon: Printer, count: 7, label: "Perangkat Cetak dan Input", iconColor: "#10B981" },
-      { icon: NetworkIcon, count: 12, label: "Perangkat Jaringan", iconColor: "#06B6D4" },
-      { icon: HardDrive, count: 5, label: "Perangkat Pendukung", iconColor: "#F59E0B" },
-    ],
-    "Perangkat Lunak (Software)": [
-      { icon: FileCode, count: 5, label: "Sistem Operasi", iconColor: "#3B82F6" },
-      { icon: FileCode, count: 7, label: "Aplikasi Perkantoran", iconColor: "#10B981" },
-    ],
-    "Jaringan & Infrastruktur TI": [
-      { icon: NetworkIcon, count: 8, label: "Kabel & Perangkat Fisik", iconColor: "#06B6D4" },
-      { icon: Shield, count: 6, label: "Keamanan Jaringan", iconColor: "#EF4444" },
-      { icon: Globe, count: 9, label: "Perangkat Komunikasi Data", iconColor: "#8B5CF6" },
-      { icon: Server, count: 5, label: "Perangkat Pendukung Infrastruktur", iconColor: "#F59E0B" },
-    ],
-    "Data & Informasi": [
-      { icon: DatabaseIcon, count: 6, label: "Database", iconColor: "#06B6D4" },
-      { icon: File, count: 9, label: "Dokumen Digital", iconColor: "#3B82F6" },
-    ],
-    "Bangunan & Fasilitas": [
-      { icon: Building2, count: 12, label: "Gedung & Ruangan", iconColor: "#F59E0B" },
-      { icon: Building2, count: 5, label: "Fasilitas Umum", iconColor: "#10B981" },
-      { icon: Building2, count: 5, label: "Area Luar", iconColor: "#8B5CF6" },
-    ],
-    "Peralatan & Kendaraan": [
-      { icon: Monitor, count: 8, label: "Furnitur Kantor", iconColor: "#64748B" },
-      { icon: Laptop, count: 5, label: "Alat Presentasi & Administrasi", iconColor: "#3B82F6" },
-      { icon: NetworkIcon, count: 5, label: "Kendaraan Dinas & Operasional", iconColor: "#EF4444" },
-    ],
+  // Mock assets data
+  const assets = [
+    {
+      id: "AST-SRV-001",
+      nama: "Server Database",
+      tipe: "Physical Server",
+      lokasi: "Data Center Lt. 3",
+      owner: "Diskominfo",
+      status: "Operational",
+      konfigurasi: "Dell PowerEdge R740, 64GB RAM",
+      hubungan: "AST-NET-001, AST-NET-002",
+      lastAudit: "2024-01-10",
+      catatan: "Regular maintenance scheduled",
+    },
+    {
+      id: "AST-SRV-002",
+      nama: "Application Server",
+      tipe: "Virtual Server",
+      lokasi: "Data Center Lt. 3",
+      owner: "Dinas Pendidikan",
+      status: "Operational",
+      konfigurasi: "VMware VM, 32GB RAM",
+      hubungan: "AST-SRV-001",
+      lastAudit: "2024-01-08",
+      catatan: "-",
+    },
+  ];
+
+  const getStatusBadge = (status: string) => {
+    const variants: Record<string, string> = {
+      Operational: "bg-green-100 text-green-800",
+      Maintenance: "bg-yellow-100 text-yellow-800",
+      Offline: "bg-red-100 text-red-800",
+    };
+    return <Badge className={`${variants[status]} border-0`}>{status}</Badge>;
   };
 
-  const subcategories = subcategoriesMap[category || ""] || [];
+  const filteredAssets = assets.filter((asset) =>
+    Object.values(asset).some((value) =>
+      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
-  const handleSubCategoryClick = (subLabel: string) => {
-    navigate(`/cmdb/${encodeURIComponent(category || "")}/${encodeURIComponent(subLabel)}`);
+  const handleUpdate = () => {
+    setShowUpdateDialog(true);
+  };
+
+  const confirmUpdate = () => {
+    setShowUpdateDialog(false);
+    toast.success("Data CMDB berhasil diperbarui");
   };
 
   return (
     <div>
-      <div className="flex items-center gap-4 mb-8">
-        <button
-          onClick={() => navigate("/cmdb")}
-          className="text-gray-600 hover:text-gray-900 transition-colors"
-          aria-label="Kembali ke CMDB"
-        >
-          <ArrowLeft size={24} />
-        </button>
-        <h1
-          className="text-5xl font-bold"
-          style={{ color: "#253040" }}
-        >
-          {category}
+      <Button
+        variant="ghost"
+        className="mb-4"
+        onClick={() => navigate("/cmdb")}
+      >
+        <ArrowLeft className="mr-2" size={18} />
+        Kembali
+      </Button>
+
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-5xl font-bold" style={{ color: "#253040" }}>
+          {category?.toUpperCase()} Assets
         </h1>
+        <Button onClick={handleUpdate} style={{ backgroundColor: "#384E66" }}>
+          Update
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {subcategories.map((subcat) => (
-          <SubCategoryCard
-            key={subcat.label}
-            icon={subcat.icon}
-            count={subcat.count}
-            label={subcat.label}
-            iconColor={subcat.iconColor}
-            onClick={() => handleSubCategoryClick(subcat.label)}
-          />
-        ))}
-      </div>
+      <Card className="bg-white border-2 border-primary/20">
+        <div className="p-4 border-b-2 border-primary/20">
+          <div className="relative border-2 border-primary/30 rounded-md overflow-hidden">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
+            <Input
+              placeholder="Cari aset..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 border-0 focus-visible:ring-0"
+            />
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Asset ID</TableHead>
+                <TableHead>Nama Asset</TableHead>
+                <TableHead>Tipe</TableHead>
+                <TableHead>Lokasi</TableHead>
+                <TableHead>Owner</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Konfigurasi</TableHead>
+                <TableHead>Hubungan</TableHead>
+                <TableHead>Last Audit</TableHead>
+                <TableHead>Catatan</TableHead>
+                <TableHead className="text-right">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredAssets.map((asset) => (
+                <TableRow key={asset.id}>
+                  <TableCell className="font-medium">{asset.id}</TableCell>
+                  <TableCell>{asset.nama}</TableCell>
+                  <TableCell>{asset.tipe}</TableCell>
+                  <TableCell>{asset.lokasi}</TableCell>
+                  <TableCell>{asset.owner}</TableCell>
+                  <TableCell>{getStatusBadge(asset.status)}</TableCell>
+                  <TableCell className="max-w-xs truncate">{asset.konfigurasi}</TableCell>
+                  <TableCell className="max-w-xs truncate">{asset.hubungan}</TableCell>
+                  <TableCell>{asset.lastAudit}</TableCell>
+                  <TableCell>{asset.catatan}</TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreVertical size={16} />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="bg-popover border-2 border-primary/30">
+                        <DropdownMenuItem 
+                          onClick={() => navigate(`/cmdb/${category}/${asset.id}/detail`)}
+                          className="text-foreground cursor-pointer"
+                        >
+                          Detail
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => navigate(`/cmdb/${category}/${asset.id}/edit`)}
+                          className="text-foreground cursor-pointer"
+                        >
+                          Ubah
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => navigate(`/cmdb/${category}/${asset.id}/history`)}
+                          className="text-foreground cursor-pointer"
+                        >
+                          Riwayat
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </Card>
+
+      {/* Update Confirmation Dialog */}
+      <Dialog open={showUpdateDialog} onOpenChange={setShowUpdateDialog}>
+        <DialogContent className="bg-popover border-2 border-primary/30">
+          <DialogHeader>
+            <DialogTitle className="text-foreground">Konfirmasi Update</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Tindakan ini akan memperbarui data seluruh pihak berwenang. Yakin ingin melakukan perubahan?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowUpdateDialog(false)} className="border-2 border-primary/30">
+              Tidak
+            </Button>
+            <Button onClick={confirmUpdate} className="bg-primary hover:bg-primary/90">
+              Ya
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

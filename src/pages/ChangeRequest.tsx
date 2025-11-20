@@ -190,15 +190,15 @@ const ChangeRequest = () => {
         </h1>
       </div>
 
-      <Card className="bg-white border-2 border-primary/20">
-        <div className="p-4 border-b-2 border-primary/20">
-          <div className="relative border-2 border-primary/30 rounded-md overflow-hidden">
+      <Card className="bg-white border-2 border-primary/20 shadow-sm">
+        <div className="p-4 border-b border-primary/20 bg-gray-50">
+          <div className="relative border border-gray-300 rounded-md overflow-hidden bg-white">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
             <Input
-              placeholder="Cari berdasarkan ID, jenis perubahan, dinas, atau aset..."
+              placeholder="Cari aset..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 border-0 focus-visible:ring-0"
+              className="pl-10 border-0 focus-visible:ring-0 bg-white"
             />
           </div>
         </div>
@@ -206,16 +206,16 @@ const ChangeRequest = () => {
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Request ID</TableHead>
-                <TableHead>Jenis Perubahan</TableHead>
-                <TableHead>Kategori Terdampak</TableHead>
-                <TableHead>Aset Terdampak</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Resiko</TableHead>
-                <TableHead>Jadwal Implementasi</TableHead>
-                <TableHead>Tanggal Diterima</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
+              <TableRow className="bg-[#253040] hover:bg-[#253040]">
+                <TableHead className="text-white font-semibold">Request ID</TableHead>
+                <TableHead className="text-white font-semibold">Jenis Perubahan</TableHead>
+                <TableHead className="text-white font-semibold">Kategori Terdampak</TableHead>
+                <TableHead className="text-white font-semibold">Aset Terdampak</TableHead>
+                <TableHead className="text-white font-semibold">Status</TableHead>
+                <TableHead className="text-white font-semibold">Resiko</TableHead>
+                <TableHead className="text-white font-semibold">Jadwal Implementasi</TableHead>
+                <TableHead className="text-white font-semibold">Tanggal Diterima</TableHead>
+                <TableHead className="text-right text-white font-semibold">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

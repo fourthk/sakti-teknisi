@@ -10,14 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
@@ -25,8 +17,7 @@ const ChangeRequestDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [authority, setAuthority] = useState<string>("");
-  const [submitted, setSubmitted] = useState(false);
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [approvalData, setApprovalData] = useState<any>(null);
 
   // Mock data - in real app, fetch based on id
   const request = {
@@ -52,18 +43,28 @@ const ChangeRequestDetail = () => {
     schedule: null,
   };
 
-  const handleSubmit = () => {
-    if (!authority) {
-      toast.error("Pilih kuasa wewenang terlebih dahulu");
-      return;
-    }
-    setShowConfirmDialog(true);
-  };
-
-  const confirmSubmit = () => {
-    setSubmitted(true);
-    setShowConfirmDialog(false);
-    toast.success("Pengajuan berhasil dikirim");
+  const handleAuthorityChange = (value: string) => {
+    setAuthority(value);
+    
+    // Automatically approve and create schedule
+    const scheduleDate = new Date();
+    scheduleDate.setDate(scheduleDate.getDate() + 3); // 3 days from now
+    
+    setApprovalData({
+      status: "Disetujui",
+      catatan: "Persetujuan otomatis berdasarkan tingkat wewenang " + value,
+      jadwal: {
+        tanggal: scheduleDate.toLocaleDateString('id-ID', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        }),
+        waktu: "09:00 - 12:00",
+        teknisi: "Tim Teknisi A"
+      }
+    });
+    
+    toast.success("Persetujuan berhasil dan jadwal implementasi telah dibuat");
   };
 
   return (
@@ -170,26 +171,17 @@ const ChangeRequestDetail = () => {
           <h2 className="text-2xl font-bold mb-6" style={{ color: "#253040" }}>
             Kuasa Wewenang
           </h2>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="w-full sm:w-auto">
-              <Select value={authority} onValueChange={setAuthority} disabled={submitted}>
-                <SelectTrigger className="w-full sm:w-[200px] border-2 border-primary/30">
-                  <SelectValue placeholder="Pilih wewenang" />
-                </SelectTrigger>
-                <SelectContent className="bg-popover border-2 border-primary/30">
-                  <SelectItem value="Minor" className="text-foreground">Minor</SelectItem>
-                  <SelectItem value="Standar" className="text-foreground">Standar</SelectItem>
-                  <SelectItem value="Mayor" className="text-foreground">Mayor</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <Button
-              onClick={handleSubmit}
-              disabled={!authority || submitted}
-              className="bg-primary hover:bg-primary/90 w-full sm:w-auto"
-            >
-              Kirim Pengajuan
-            </Button>
+          <div className="w-full sm:w-[300px]">
+            <Select value={authority} onValueChange={handleAuthorityChange} disabled={!!authority}>
+              <SelectTrigger className="w-full border-2 border-primary/30 bg-background">
+                <SelectValue placeholder="Pilih wewenang" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-2 border-primary/30 z-50">
+                <SelectItem value="Minor" className="text-foreground">Minor</SelectItem>
+                <SelectItem value="Standar" className="text-foreground">Standar</SelectItem>
+                <SelectItem value="Mayor" className="text-foreground">Mayor</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </Card>
       )}
@@ -199,49 +191,43 @@ const ChangeRequestDetail = () => {
         <h2 className="text-2xl font-bold mb-6" style={{ color: "#253040" }}>
           Status Persetujuan & Jadwal Implementasi
         </h2>
-        {request.approval ? (
+        {approvalData ? (
           <div className="space-y-6">
             <div>
               <p className="text-sm text-muted-foreground mb-2">Hasil Persetujuan</p>
               <Badge className="bg-green-100 text-green-800 border-0 text-sm px-3 py-1">
-                Disetujui
+                {approvalData.status}
               </Badge>
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-1">Catatan Persetujuan</p>
-              <p className="font-semibold text-foreground">Approved dengan monitoring ketat</p>
+              <p className="font-semibold text-foreground">{approvalData.catatan}</p>
             </div>
-            {request.schedule && (
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Jadwal Implementasi</p>
-                <p className="font-semibold text-foreground">2024-01-20, 09:00 - Tim Teknisi A</p>
+            <div className="border-t pt-4">
+              <h3 className="text-lg font-semibold mb-4" style={{ color: "#253040" }}>
+                Jadwal Implementasi
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Tanggal</p>
+                  <p className="font-semibold text-foreground">{approvalData.jadwal.tanggal}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Waktu</p>
+                  <p className="font-semibold text-foreground">{approvalData.jadwal.waktu}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Teknisi</p>
+                  <p className="font-semibold text-foreground">{approvalData.jadwal.teknisi}</p>
+                </div>
               </div>
-            )}
+            </div>
           </div>
         ) : (
           <p className="text-muted-foreground italic text-center py-4">Menunggu Persetujuan</p>
         )}
       </Card>
 
-      {/* Confirmation Dialog */}
-      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <DialogContent className="bg-popover border-2 border-primary/30">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">Konfirmasi Pengajuan</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Tindakan ini akan mengirim pengajuan ke pihak yang berwenang. Yakin ingin melakukan perubahan?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowConfirmDialog(false)} className="border-2 border-primary/30">
-              Batal
-            </Button>
-            <Button onClick={confirmSubmit} className="bg-primary hover:bg-primary/90">
-              Ya
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

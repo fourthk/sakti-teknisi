@@ -18,14 +18,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -40,10 +32,6 @@ const ChangeRequest = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
-  const [showStatusDialog, setShowStatusDialog] = useState(false);
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState<string | null>(null);
-  const [newStatus, setNewStatus] = useState("");
 
   const requests = [
     {
@@ -160,28 +148,6 @@ const ChangeRequest = () => {
     filteredRequests = filteredRequests.filter((req) => req.status === statusFilter);
   }
 
-  const handleStatusClick = (requestId: string) => {
-    setSelectedRequest(requestId);
-    setNewStatus("");
-    setShowStatusDialog(true);
-  };
-
-  const handleStatusChange = () => {
-    if (!newStatus) {
-      toast.error("Pilih status terlebih dahulu");
-      return;
-    }
-    setShowStatusDialog(false);
-    setShowConfirmDialog(true);
-  };
-
-  const confirmStatusChange = () => {
-    setShowConfirmDialog(false);
-    toast.success("Status berhasil diubah");
-    setSelectedRequest(null);
-    setNewStatus("");
-  };
-
   return (
     <div>
       <div className="mb-8">
@@ -262,12 +228,6 @@ const ChangeRequest = () => {
                         >
                           Detail
                         </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => handleStatusClick(request.id)}
-                          className="text-foreground cursor-pointer"
-                        >
-                          Ubah Status
-                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -277,59 +237,6 @@ const ChangeRequest = () => {
           </Table>
         </div>
       </Card>
-
-      {/* Status Change Dialog */}
-      <Dialog open={showStatusDialog} onOpenChange={setShowStatusDialog}>
-        <DialogContent className="bg-popover border-2 border-primary/30">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">Ubah Status</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Pilih status baru untuk request {selectedRequest}
-            </DialogDescription>
-          </DialogHeader>
-          <Select value={newStatus} onValueChange={setNewStatus}>
-            <SelectTrigger className="border-2 border-primary/30">
-              <SelectValue placeholder="Pilih status" />
-            </SelectTrigger>
-            <SelectContent className="bg-popover border-2 border-primary/30">
-              <SelectItem value="Reviewed" className="text-foreground">Reviewed</SelectItem>
-              <SelectItem value="Approved" className="text-foreground">Approved</SelectItem>
-              <SelectItem value="Scheduled" className="text-foreground">Scheduled</SelectItem>
-              <SelectItem value="Implementing" className="text-foreground">Implementing</SelectItem>
-              <SelectItem value="Completed" className="text-foreground">Completed</SelectItem>
-              <SelectItem value="Failed" className="text-foreground">Failed</SelectItem>
-            </SelectContent>
-          </Select>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowStatusDialog(false)} className="border-2 border-primary/30">
-              Batal
-            </Button>
-            <Button onClick={handleStatusChange} className="bg-primary hover:bg-primary/90">
-              OK
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Confirmation Dialog */}
-      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <DialogContent className="bg-popover border-2 border-primary/30">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">Konfirmasi Perubahan</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Tindakan ini akan mengubah status. Yakin ingin melakukan perubahan?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowConfirmDialog(false)} className="border-2 border-primary/30">
-              Batal
-            </Button>
-            <Button onClick={confirmStatusChange} className="bg-primary hover:bg-primary/90">
-              Ya
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

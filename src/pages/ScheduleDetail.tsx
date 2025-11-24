@@ -14,11 +14,9 @@ const ScheduleDetail = () => {
     requestId: "CR-2024-003",
     jenisPerubahan: "Penggantian Hardware",
     asetTerdampak: "Switch Network",
-    statusImplementasi: "Waiting",
     resiko: "Medium",
     jadwal: "2024-01-20 09:00",
     lokasi: "Ruang Server Diskominfo",
-    teknisi: null,
     inspection: {
       hasil: "Perlu dilakukan penggantian switch yang sudah berumur 8 tahun",
       skorDampak: 7,
@@ -47,103 +45,82 @@ const ScheduleDetail = () => {
       </h1>
 
       {/* Basic Info */}
-      <Card className="bg-white p-6 mb-6">
-        <h2 className="text-2xl font-bold mb-4" style={{ color: "#253040" }}>
+      <Card className="bg-white p-6 mb-6 border-2 border-gray-200 shadow-sm">
+        <h2 className="text-2xl font-bold mb-6" style={{ color: "#253040" }}>
           Informasi Jadwal
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <p className="text-sm text-muted-foreground">ID Request</p>
-            <p className="font-semibold">{schedule.requestId}</p>
+            <p className="text-sm text-muted-foreground mb-1">ID Request</p>
+            <p className="font-semibold text-foreground">{schedule.requestId}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Jenis Perubahan</p>
-            <p className="font-semibold">{schedule.jenisPerubahan}</p>
+            <p className="text-sm text-muted-foreground mb-1">Jenis Perubahan</p>
+            <p className="font-semibold text-foreground">{schedule.jenisPerubahan}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Aset Terdampak</p>
-            <p className="font-semibold">{schedule.asetTerdampak}</p>
+            <p className="text-sm text-muted-foreground mb-1">Aset Terdampak</p>
+            <p className="font-semibold text-foreground">{schedule.asetTerdampak}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Status Implementasi</p>
-            <Badge className="bg-blue-100 text-blue-800 border-0">
-              {schedule.statusImplementasi}
-            </Badge>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Resiko</p>
-            <Badge className="bg-yellow-100 text-yellow-800 border-0">
+            <p className="text-sm text-muted-foreground mb-1">Resiko</p>
+            <Badge className="bg-yellow-100 text-yellow-800 border-0 px-3 py-1">
               {schedule.resiko}
             </Badge>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Jadwal Implementasi</p>
-            <p className="font-semibold">{schedule.jadwal}</p>
+            <p className="text-sm text-muted-foreground mb-1">Jadwal Implementasi</p>
+            <p className="font-semibold text-foreground">{schedule.jadwal}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Lokasi</p>
-            <p className="font-semibold">{schedule.lokasi}</p>
+            <p className="text-sm text-muted-foreground mb-1">Lokasi</p>
+            <p className="font-semibold text-foreground">{schedule.lokasi}</p>
           </div>
         </div>
       </Card>
 
       {/* Inspection Results */}
-      <Card className="bg-white p-6 mb-6">
-        <h2 className="text-2xl font-bold mb-4" style={{ color: "#253040" }}>
+      <Card className="bg-white p-6 border-2 border-gray-200 shadow-sm">
+        <h2 className="text-2xl font-bold mb-6" style={{ color: "#253040" }}>
           Hasil Inspeksi
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div>
-            <p className="text-sm text-muted-foreground">Hasil Inspeksi</p>
-            <p className="font-semibold">{schedule.inspection.hasil}</p>
+            <p className="text-sm text-muted-foreground mb-1">Hasil Inspeksi</p>
+            <p className="font-semibold text-foreground">{schedule.inspection.hasil}</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <p className="text-sm text-muted-foreground">Skor Dampak</p>
-              <p className="font-semibold">{schedule.inspection.skorDampak}</p>
+            <div className="border border-gray-200 p-4 rounded-lg">
+              <p className="text-sm text-muted-foreground mb-1">Skor Dampak</p>
+              <p className="text-xl font-bold text-foreground">{schedule.inspection.skorDampak}</p>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Skor Kemungkinan</p>
-              <p className="font-semibold">{schedule.inspection.skorKemungkinan}</p>
+            <div className="border border-gray-200 p-4 rounded-lg">
+              <p className="text-sm text-muted-foreground mb-1">Skor Kemungkinan</p>
+              <p className="text-xl font-bold text-foreground">{schedule.inspection.skorKemungkinan}</p>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Skor Exposure</p>
-              <p className="font-semibold">{schedule.inspection.skorExposure}</p>
+            <div className="border border-gray-200 p-4 rounded-lg">
+              <p className="text-sm text-muted-foreground mb-1">Skor Exposure</p>
+              <p className="text-xl font-bold text-foreground">{schedule.inspection.skorExposure}</p>
             </div>
-            <div className="bg-red-50 p-3 rounded-lg">
-              <p className="text-sm text-muted-foreground">Skor Resiko</p>
+            <div className="bg-red-50 border-2 border-red-200 p-4 rounded-lg">
+              <p className="text-sm text-red-700 font-medium mb-1">Skor Resiko</p>
               <p className="text-3xl font-bold text-red-600">{schedule.inspection.skorResiko}</p>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <p className="text-sm text-muted-foreground">Estimasi Biaya</p>
-              <p className="font-semibold">{schedule.inspection.estimasiBiaya}</p>
+              <p className="text-sm text-muted-foreground mb-1">Estimasi Biaya</p>
+              <p className="font-semibold text-foreground">{schedule.inspection.estimasiBiaya}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Estimasi Pengerjaan</p>
-              <p className="font-semibold">{schedule.inspection.estimasiPengerjaan}</p>
+              <p className="text-sm text-muted-foreground mb-1">Estimasi Pengerjaan</p>
+              <p className="font-semibold text-foreground">{schedule.inspection.estimasiPengerjaan}</p>
             </div>
           </div>
           {schedule.inspection.foto && (
-            <Button variant="outline">Lihat Foto</Button>
+            <Button variant="outline" className="border-2 border-primary/30">Lihat Foto</Button>
           )}
         </div>
-      </Card>
-
-      {/* Technician Assignment */}
-      <Card className="bg-white p-6">
-        <h2 className="text-2xl font-bold mb-4" style={{ color: "#253040" }}>
-          Teknisi yang Bertugas
-        </h2>
-        {schedule.teknisi ? (
-          <div>
-            <p className="font-semibold text-lg">{schedule.teknisi}</p>
-            <Badge className="bg-green-100 text-green-800 border-0 mt-2">Accept</Badge>
-          </div>
-        ) : (
-          <p className="text-muted-foreground italic">Teknisi belum mengambil tugas</p>
-        )}
       </Card>
     </div>
   );
